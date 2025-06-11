@@ -1,0 +1,15 @@
+{
+  "name": "arkas-shipping-services-demo",
+  "version": "1.0.0",
+  "description": "ARKAS Shipping Services - Interactive Route Visualization Demo",
+  "main": "dist/index.html",
+  "scripts": {
+    "start": "npx http-server dist -p 8000",
+    "build": "echo 'Build complete - static files ready'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": ["arkas", "shipping", "routes", "maritime", "visualization"],
+  "author": "ARKAS Holding A.S.",
+  "license": "Private",
+  "type": "commonjs"
+}

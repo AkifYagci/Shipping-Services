@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ARKAS Shipping Services - Interactive Route Map</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="container">
+    <canvas id="c"></canvas>
+    
+    <!-- Header -->
+    <div class="header">
+      <h1>🚢 ARKAS SHIPPING SERVICES</h1>
+      <p>Interactive Route Visualization</p>
+    </div>
+    
+    <!-- Map Settings Panel -->
+    <div class="map-settings" id="mapSettings">
+      <div class="settings-header">
+        <h3>🌍 Harita Ayarları</h3>
+        <button class="toggle-settings" id="toggleSettings">⚙️</button>
+      </div>
+      <div class="settings-content" id="settingsContent">
+        <div class="setting-group">
+          <label>Görünüm Tipi:</label>
+          <select id="projectionType">
+            <option value="orthographic">🌎 Küre Görünümü</option>
+            <option value="natural" disabled>🗺️ Doğal Görünüm (yakında)</option>
+            <option value="mercator" disabled>📍 Mercator (yakında)</option>
+            <option value="robinson" disabled>🌐 Robinson (yakında)</option>
+          </select>
+        </div>
+        
+        <div class="setting-group">
+          <label>Zoom Seviyesi:</label>
+          <div class="zoom-controls">
+            <button id="zoomOut">➖</button>
+            <span id="zoomLevel">500</span>
+            <button id="zoomIn">➕</button>
+          </div>
+        </div>
+        
+        <div class="setting-group">
+          <label>Renk Teması:</label>
+          <select id="colorTheme">
+            <option value="ocean">🌊 Okyanus</option>
+            <option value="satellite">🛰️ Uydu</option>
+            <option value="dark">🌙 Karanlık</option>
+            <option value="classic">📜 Klasik</option>
+          </select>
+        </div>
+        
+        <div class="setting-group">
+          <label>Rota Tipi:</label>
+          <select id="routeType">
+            <option value="direct">✈️ Doğrudan (Hava/Kara)</option>
+            <option value="sea">🚢 Deniz Rotası (Sadece Okyanus)</option>
+          </select>
+        </div>
+        
+        <div class="setting-group">
+          <label>Animasyon Hızı:</label>
+          <input type="range" id="animationSpeed" min="0.5" max="3" step="0.1" value="1">
+          <span id="speedValue">1.0x</span>
+        </div>
+        
+        <div class="setting-group">
+          <label>Port Etiketleri:</label>
+          <input type="checkbox" id="showLabels" checked>
+          <span>Göster</span>
+        </div>
+        
+        <button id="resetView" class="reset-btn">🔄 Görünümü Sıfırla</button>
+      </div>
+    </div>
+    
+    <!-- Service Categories Tabs -->
+    <div class="tabs-container">
+      <div class="tabs">
+        <button class="tab-button active" data-category="BSE">BLACK SEA (BSE)</button>
+        <button class="tab-button" data-category="EMED">EAST MED (EMED)</button>
+        <button class="tab-button" data-category="WMED">WEST MED (WMED)</button>
+        <button class="tab-button" data-category="NAF">NORTH AFRICA (NAF)</button>
+        <button class="tab-button" data-category="WAF">WEST AFRICA (WAF)</button>
+        <button class="tab-button" data-category="NAM">NORTH AMERICA (NAM)</button>
+        <button class="tab-button" data-category="RSS">RED SEA & INDIA</button>
+      </div>
+      
+      <!-- Service Lists for each category -->
+      <div class="services-panel">
+        
+        <!-- BLACK SEA Services -->
+        <div class="service-category active" id="BSE">
+          <h3>BLACK SEA SERVICES</h3>
+          <div class="service-list">
+            <button class="service-button" data-service="MRS">MRS - Türkiye → Rusya → Türkiye</button>
+            <button class="service-button" data-service="REX2">REX2 - Mısır → Rusya → Mısır</button>
+            <button class="service-button" data-service="TBS">TBS - Türkiye → Bulgaristan → Türkiye</button>
+            <button class="service-button" data-service="TPS">TPS - Türkiye → Gürcistan → Türkiye</button>
+            <button class="service-button" data-service="APS">APS - Türkiye → Gürcistan → Türkiye</button>
+            <button class="service-button" data-service="TRS">TRS - Türkiye → Romanya → Türkiye</button>
+            <button class="service-button" data-service="UEX">UEX - Ukrayna → Türkiye → Yunanistan → Ukrayna</button>
+          </div>
+        </div>
+        
+        <!-- EAST MEDITERRANEAN Services -->
+        <div class="service-category" id="EMED">
+          <h3>EAST MEDITERRANEAN SERVICES</h3>
+          <div class="service-list">
+            <button class="service-button" data-service="BMS">BMS - Multi-port Mediterranean Route</button>
+            <button class="service-button" data-service="TLS">TLS - Türkiye → Mısır → Lübnan → Türkiye</button>
+            <button class="service-button" data-service="IAS">IAS - Yunanistan → Türkiye → Yunanistan</button>
+          </div>
+        </div>
+        
+        <!-- WEST MEDITERRANEAN Services -->
+        <div class="service-category" id="WMED">
+          <h3>WEST MEDITERRANEAN SERVICES</h3>
+          <div class="service-list">
+            <button class="service-button" data-service="ASA">ASA - Fransa → İspanya → Yunanistan → Türkiye → Fransa</button>
+            <button class="service-button" data-service="ITE">ITE - İtalya → Türkiye → İtalya</button>
+            <button class="service-button" data-service="SPX">SPX - İspanya → Fas</button>
+          </div>
+        </div>
+        
+        <!-- NORTH AFRICA Services -->
+        <div class="service-category" id="NAF">
+          <h3>NORTH AFRICA SERVICES</h3>
+          <div class="service-list">
+            <button class="service-button" data-service="AEX">AEX - İtalya → Fransa → İspanya → Cezayir → İtalya</button>
+            <button class="service-button" data-service="LTS1">LTS1 - Türkiye → Tunus → Türkiye</button>
+            <button class="service-button" data-service="LTS2">LTS2 - Türkiye → Libya → Türkiye</button>
+            <button class="service-button" data-service="NAS">NAS - Türkiye → Cezayir → Türkiye</button>
+            <button class="service-button" data-service="OEX">OEX - İspanya → Cezayir → İspanya</button>
+            <button class="service-button" data-service="FMS">FMS - Fransa → Fas → Fransa</button>
+            <button class="service-button" data-service="WBS">WBS - Türkiye → Fas → İspanya → Türkiye</button>
+          </div>
+        </div>
+        
+        <!-- WEST AFRICA Services -->
+        <div class="service-category" id="WAF">
+          <h3>WEST AFRICA SERVICES</h3>
+          <div class="service-list">
+            <button class="service-button" data-service="WAS">WAS - West Africa Circular Route</button>
+            <button class="service-button" data-service="MCS">MCS - Fas → Fas (İç Hat)</button>
+          </div>
+        </div>
+        
+        <!-- NORTH AMERICA Services -->
+        <div class="service-category" id="NAM">
+          <h3>NORTH AMERICA SERVICES</h3>
+          <div class="service-list">
+            <button class="service-button" data-service="USA">USA - Türkiye → ABD → Türkiye</button>
+          </div>
+        </div>
+        
+        <!-- RED SEA & INDIA Services -->
+        <div class="service-category" id="RSS">
+          <h3>RED SEA & SUBCONTINENT INDIA SERVICES</h3>
+          <div class="service-list">
+            <button class="service-button" data-service="IMS">IMS - Multi-port India Route</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- Route Info Display -->
+    <div class="route-info" id="routeInfo">
+      <div class="route-details">
+        <h3 id="serviceName">Servis Seçin</h3>
+        <p id="routeDescription">Haritada görmek istediğiniz servisi seçin</p>
+        <div class="route-stats">
+          <div class="stat">
+            <span class="stat-label">Mesafe:</span>
+            <span id="routeDistance">-</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Süre:</span>
+            <span id="routeDuration">-</span>
+          </div>
+        </div>
+        <div class="route-progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <button id="startRoute" disabled>🚢 Rotayı Başlat</button>
+        <button id="pauseRoute" style="display: none;">⏸️ Duraklat</button>
+        <button id="resetRoute" style="display: none;">🔄 Sıfırla</button>
+      </div>
+    </div>
+    
+  </div>
+  
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/6.3.1/d3.min.js'></script>
+  <script src='https://unpkg.co/gsap@3/dist/gsap.min.js'></script>
+  <script src='https://assets.codepen.io/3685267/around-the-world-map-data-v2.js'></script>
+  <script src='https://assets.codepen.io/3685267/verser.js'></script>
+  <script src="./script.js"></script>
+</body>
+</html>
